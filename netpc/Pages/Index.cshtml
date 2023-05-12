@@ -1,0 +1,52 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model IndexModel
+@{
+         var message = ViewData["Message"]?.ToString();
+
+}
+
+<div class="text-center">
+    <h1 class="display-4">Strona główna</h1>
+    <p>Poniżej znajduje się tabela kontaktów. Aby edytować dane, zaloguj się.</p>    
+</div>
+<hr/>
+   
+    @if(Model.Contacts != null&& Model.Contacts.Any()){
+
+        <table class="table" id="contactsTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody> 
+                @foreach (var contact in Model.Contacts)             
+                {
+                    <tr>
+                        <td>@contact.Id</td>
+                        <td>@contact.fullName</td>
+                        <td>@contact.Email</td>
+                        <td>
+                            <button type="button" class="btn btn-info" onclick="window.location.href='/contacts/list'">Info</button>
+                             
+                            @if (SignInManager.IsSignedIn(User))
+                            {                            
+                                <a href="/contacts/edit/@contact.Id" class="btn btn-dark">Edytuj</a>                       
+                            }                                                        
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else{
+        <p>Nie znaleziono użytkowników!</p>
+    }
+
+

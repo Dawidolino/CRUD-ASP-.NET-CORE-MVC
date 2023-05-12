@@ -1,0 +1,48 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model netpc.Pages.Contacts.ListModel
+@{
+}
+<h1 class="mb-3">Lista kontaktów</h1>
+
+@if(Model.Contacts != null&& Model.Contacts.Any()){
+
+    <table class="table" id="contactsTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Imię i nazwisko</th>
+                <th>Email</th>
+                <th>Data urodzenia</th>
+                <th>Numer telefonu</th>
+                <th>Kategoria</th>
+                <th>Podkategoria</th>
+            </tr>
+        </thead>
+        <tbody> 
+            @foreach (var contact in Model.Contacts)           
+            {
+                <tr>
+                    <td>@contact.Id</td>
+                    <td>@contact.fullName</td>
+                    <td>@contact.Email</td>
+                    <td>@contact.DateOfBirth.ToString("MM.dd.yyyy")</td>
+                    <td>@contact.PhoneNumber</td>
+                    <td>@contact.Category</td>
+                    <td>@contact.Subcategory</td>
+                    <td>
+                        @if (SignInManager.IsSignedIn(User))
+                        {                            
+                        <a href="/contacts/edit/@contact.Id" class="btn btn-dark">Edytuj</a>                       
+                        }                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else{
+    <p>Nie znaleziono użytkowników!</p>
+}

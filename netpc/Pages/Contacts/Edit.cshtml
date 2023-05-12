@@ -1,0 +1,97 @@
+﻿@page "{id:int}"
+@using netpc.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model netpc.Pages.Contacts.EditModel
+@{
+    var message = ViewData["Message"]?.ToString();
+    var errorMessage1 = ViewData["EmailInUseError"]?.ToString();
+    var errorMessage2 = ViewData["PasswordComplexityError"]?.ToString();
+}
+ @if (SignInManager.IsSignedIn(User))
+ {                            
+   @if (Model.EditContactViewModel!=null)
+    {
+    <form method="post" >
+
+    <h1 class="mb-3">Edytuj kontakty</h1>
+    @if (!string.IsNullOrWhiteSpace(message))
+    {
+        <div class="alert-success"role="alert">
+            @message
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(errorMessage1))
+    {
+        <div class="alert alert-danger" role="alert">@ViewData["EmailInUseError"]</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(errorMessage2))
+    {
+        <div class="alert alert-danger" role="alert">@ViewData["PasswordComplexityError"]</div>
+    }
+    <div class="mb-3">
+        <label class="form-label">Id</label>
+        <input type="text" class="form-control" asp-for="EditContactViewModel.Id" readonly/> 
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Imię</label>
+        <input type="text" class="form-control" asp-for="EditContactViewModel.FirstName" /> 
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nazwisko</label>
+        <input type="text" class="form-control" asp-for="EditContactViewModel.LastName" /> 
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" asp-for="EditContactViewModel.Email"/>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Hasło</label>
+        <input type="password" class="form-control" asp-for="EditContactViewModel.Password"/>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Numer telefonu</label>
+        <input type="text" class="form-control" asp-for="EditContactViewModel.PhoneNumber"/>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Data urodzenia</label>
+        <input type="date" class="form-control" asp-for="EditContactViewModel.DateOfBirth"/>
+    </div>
+    
+    <div class="mb-3">
+    <label class="form-label">Kategoria</label>
+    <select class="form-control" asp-for="EditContactViewModel.Category">
+        <option value="">-- Wybierz kategorię --</option>
+        <option value="@ContactCategoryEnum.Business">Służbowy</option>
+        <option value="@ContactCategoryEnum.Private">Prywatny</option>
+        <option value="@ContactCategoryEnum.Other">Inny</option>
+    </select>
+    </div>
+        <div class="mb-3">
+        <label class="form-label">Podkategoria</label>
+        <select class="form-control" asp-for="EditContactViewModel.Subcategory">
+            <option value="">-- Wybierz podkategorię --</option>
+            <option value="@ContactSubcategoryEnum.Boss">Szef</option>
+            <option value="@ContactSubcategoryEnum.Customer">Klient</option>
+            <option value="@ContactSubcategoryEnum.Employee">Pracownik</option>
+            <option value="@ContactSubcategoryEnum.Other">Inne</option>
+        </select>
+    </div>
+        <div class="mb-3 d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary"asp-page-handler="Update">Zapisz</button>
+            <button type="submit" class="btn btn-danger"asp-page-handler="Delete">Usuń</button>        
+        </div>
+    </form>    
+    }
+    else{
+        <div class="container">
+            <p>Nie znaleziono kontaktu do edycji</p>
+        </div>
+
+    }               
+ } 
+ else
+{
+    <p>Zaloguj się, by móc edytować dane</p>
+}

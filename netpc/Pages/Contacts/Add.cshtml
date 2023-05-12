@@ -1,0 +1,79 @@
+﻿@page "/contacts/add"
+@using netpc.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model netpc.Pages.Contacts.AddModel
+@{
+    var message = ViewData["Message"]?.ToString();
+    var errorMessage1 = ViewData["EmailInUseError"]?.ToString();
+    var errorMessage2 = ViewData["PasswordComplexityError"]?.ToString();
+}
+ @if (SignInManager.IsSignedIn(User))
+ {  
+    <form method="post">       
+            <h1 class="mb-3">Dodaj użytkownika</h1>
+       @if (!string.IsNullOrWhiteSpace(errorMessage1))
+       {
+           <div class="alert alert-danger" role="alert">@ViewData["EmailInUseError"]</div>
+       }
+       @if (!string.IsNullOrWhiteSpace(errorMessage2))
+       {
+           <div class="alert alert-danger" role="alert">@ViewData["PasswordComplexityError"]</div>
+       }
+       @if (!string.IsNullOrWhiteSpace(message))
+       {
+           <div class="alert alert-success" role="alert">@message</div>
+       }
+       <div class="mb-3">
+           <label class="form-label">Imię</label>
+           <input type="text" class="form-control" asp-for="AddContactRequest.FirstName"/>
+       </div>
+       <div class="mb-3">
+           <label class="form-label">Nazwisko</label>
+           <input type="text" class="form-control" asp-for="AddContactRequest.LastName"/>
+       </div>
+       <div class="mb-3">
+           <label class="form-label">Email</label>      
+           <input type="email" class="form-control" asp-for="AddContactRequest.Email"/>
+       </div>
+       <div class="mb-3">
+           <label class="form-label">Hasło</label>
+           <input type="password" class="form-control" asp-for="AddContactRequest.Password"/>
+       </div>
+       <div class="mb-3">
+           <label class="form-label">Numer telefonu</label>
+           <input type="text" class="form-control" asp-for="AddContactRequest.PhoneNumber"/>
+       </div>
+       <div class="mb-3">
+           <label class="form-label">Data urodzenia</label>
+           <input type="date" class="form-control" asp-for="AddContactRequest.DateOfBirth"/>
+       </div>
+           <div class="mb-3">
+             <label class="form-label">Kategoria</label>
+             <select class="form-control" asp-for="AddContactRequest.Category">
+                 <option value="">-- Wybierz kategorię --</option>
+                 <option value="@ContactCategoryEnum.Business">Służbowy</option>
+                 <option value="@ContactCategoryEnum.Private">Prywatny</option>
+                 <option value="@ContactCategoryEnum.Other">Inny</option>
+             </select>
+           </div>
+       <div class="mb-3">
+            <label class="form-label">Podkategoria</label>
+            <select class="form-control" asp-for="AddContactRequest.Subcategory">
+                <option value="">-- Wybierz podkategorię --</option>
+                <option value="@ContactSubcategoryEnum.Boss">Szef</option>
+                <option value="@ContactSubcategoryEnum.Customer">Klient</option>
+                <option value="@ContactSubcategoryEnum.Employee">Pracownik</option>
+                <option value="@ContactSubcategoryEnum.Other">Inne</option>
+            </select>
+       </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Zapisz</button>
+            </div>
+   
+    </form>
+}
+else{
+    <p>Zaloguj się, by móc dodawać kontakty.</p>
+}
